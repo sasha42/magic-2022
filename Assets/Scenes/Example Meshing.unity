@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571336, b: 0.3069219, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571343, b: 0.30692208, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -500,6 +500,32 @@ MonoBehaviour:
   - {fileID: 2526502548223970919, guid: 6bd086e81054f4dbcb9bb56f4388cc63, type: 3}
   - {fileID: 9148962634792618436, guid: 296a10ca41cf94d29a18cc8310342b31, type: 3}
   speed: 1
+  button:
+    m_Name: Button
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 52e8f348-48e4-4e6b-a559-ff398fcdd12e
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  encoder:
+    m_Name: Encoder
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 54fe45e6-5d3b-468f-86df-75b8ac17ac8f
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 457b8edb-3c1a-43d6-be45-f439a3adc74d
+      m_Path: <Esp32InputDevice>/encoder
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Encoder
+      m_Flags: 0
+    m_Flags: 0
 --- !u!4 &1101776124
 Transform:
   m_ObjectHideFlags: 0
@@ -714,6 +740,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sun: {fileID: 1631680324}
   speed: 1
+--- !u!1 &1730793516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1730793520}
+  - component: {fileID: 1730793519}
+  - component: {fileID: 1730793518}
+  - component: {fileID: 1730793517}
+  m_Layer: 0
+  m_Name: ESP32 Input
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1730793517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730793516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 108b09b7c6151445cb27f352b912836a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  url: https://ecal-mid.ch/magicleap/devices.json
+--- !u!114 &1730793518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730793516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fb07029dd5847f4bb81d92950f980a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1730793519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730793516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 269a7419b47a47f0bff769a8ade8cfe9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 16e02b0d916ff480493d041f0d86bbaa, type: 2}
+--- !u!4 &1730793520
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730793516}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1762384351
 GameObject:
   m_ObjectHideFlags: 0
