@@ -9,7 +9,8 @@ public class CloudGenerator : MonoBehaviour
     public GameObject[] clouds;
 
     // Control speed of movement
-    public float speed;
+
+    public float constantSpeed;
 
     // Bounds of clouds
     public float leftBounds;
@@ -23,18 +24,21 @@ public class CloudGenerator : MonoBehaviour
     public InputAction button;
     public InputAction encoder;
     private float startScaleY;
-    float encoderVal;
 
     // Motor stuff
     Esp32InputDevice lastInputDevice;
     float lastValue;
-	float smoothSpeed = 0;
+	float speed = 0;
+    float position;
 
     // Internal stuff
     GameObject myCloud;
     GameObject[] allClouds;
     int iterationLength;
     float lastVal;
+
+    // Smooth moving around
+    int[] lerpStates = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // Start is called before the first frame update
     void Start()
@@ -67,32 +71,55 @@ public class CloudGenerator : MonoBehaviour
     void Update()
     {
         // Read rotary encoder value
-        encoderVal = encoder.ReadValue<float>();
+        float encoderVal = encoder.ReadValue<float>();
 
 
         // Compuate delta for movement
-        float moveVal = (encoderVal - lastVal);
+        float targetSpeed = (encoderVal - lastVal) / Time.deltaTime;
+        speed = Mathf.Lerp(speed,targetSpeed,Time.deltaTime*3);
+        position += speed * Time.deltaTime;
+
+        // moveVal = Mathf.Lerp(moveVal, lastVal, Time.deltaTime);
+        // lastInputDevice.SendMotorSpeed(Mathf.InverseLerp(0,2f, smoothSpeed));
+
+        ////////////
+        /*if (moveVal != 0) {
+            // Generate lerp between this and last move val
+            for (var i = 1; i < 10; i++) {
+                float lerpVal = Mathf.Lerp(moveVal, lastVal, (float)((float)1/(float)i));
+
+            }
+            // Save to array
+       // } else {
+
+        }*/
+        ////////////
 
         // Save current value to calculate delta
         lastVal = encoderVal;
+
 
         // Move all the clouds
         for (var i = 0; i < iterationLength; i++)
         {
             // Standard moving like as if there is wind
-            float x = allClouds[i].transform.position.x + (float)((Time.time * speed)/10000);
+            float x = allClouds[i].transform.position.x;
             float y = allClouds[i].transform.position.y;
             float z = allClouds[i].transform.position.z;
+
 
             // If clouds are out of bounds, move them back
             if (x > rightBounds) {
                 // Debug.Log("Out of bounds");
-                x = leftBounds;
+                 x = leftBounds;
             } 
 
+            x += (float)constantSpeed * Time.deltaTime;
+            
             // Move clouds based on rotary encoder
-            if (moveVal != 0 && encoderVal < maxButton+0.1 && encoderVal > minButton-0.1) {
-                x = allClouds[i].transform.position.x - (float)(moveVal*10);
+            if ( position < maxButton+0.1 && position > minButton-0.1) {
+                // Debug.Log(moveVal*10);
+                x -= (float)(speed*0.2f);
             }
 
             allClouds[i].transform.position = new Vector3(x, y, z);
