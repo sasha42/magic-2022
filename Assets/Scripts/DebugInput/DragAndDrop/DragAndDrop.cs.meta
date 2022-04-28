@@ -1,10 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/CloudGenerator.cs.meta
-guid: ebdd91808c2b040989d64fbc4f0c7fc3
-========
 guid: cc5e6d17fbf53450d8cff64e69fea130
->>>>>>>> upstream/main:Assets/Scripts/DebugInput/DragAndDrop/DragAndDrop.cs.meta
-MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
