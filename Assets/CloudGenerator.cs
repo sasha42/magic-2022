@@ -12,6 +12,8 @@ public class CloudGenerator : MonoBehaviour
 
     public float constantSpeed;
 
+    public ParticleSystem particles;
+
     // Bounds of clouds
     public float leftBounds;
     public float rightBounds;
@@ -65,6 +67,9 @@ public class CloudGenerator : MonoBehaviour
             // Instantiate cloud
             allClouds[i] = Instantiate(myCloud, new Vector3(x, y, z), Quaternion.identity) as GameObject;
         }
+
+        // Stop particles by default
+        particles.Stop();
     }
 
     // Update is called once per frame
@@ -143,6 +148,10 @@ public class CloudGenerator : MonoBehaviour
                 // Debug.Log(smoothSpeed);
                 // lastInputDevice.SendMotorSpeed(Mathf.InverseLerp(0,2f, smoothSpeed));
                 lastInputDevice.SendMotorSpeed(adjustedValue);
+
+                // particles.Play();
+                // particles.emissionRate = 1500*value;
+
                 // lastValue = adjustedValue;
             } else if (encoderVal < minButton+0.3) {
                 encoderVal = lastVal;
@@ -157,8 +166,25 @@ public class CloudGenerator : MonoBehaviour
                 lastInputDevice.SendMotorSpeed(adjustedValue);
                 // lastInputDevice.SendMotorSpeed(0.5f);
                 // lastValue = value;
+                // particles.Play();
+                // particles.emissionRate = 1500*value;
+            // } else {
+                // lastInputDevice.SendMotorSpeed(0);
+                // particles.Stop();
+            }
+
+            // Do the rain
+             if (encoderVal > maxButton) {
+                float value = encoder.ReadValue<float>();
+                particles.Play();
+                particles.emissionRate = Mathf.Pow(100*value, 2);
+            } else if (encoderVal < minButton) {
+                float value = Mathf.Abs(encoder.ReadValue<float>());
+                particles.Play();
+                particles.emissionRate = Mathf.Pow(100*value, 2);
             } else {
                 lastInputDevice.SendMotorSpeed(0);
+                particles.Stop();
             }
 		}
     }
