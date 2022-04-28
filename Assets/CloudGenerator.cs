@@ -17,6 +17,8 @@ public class CloudGenerator : MonoBehaviour
     // Bounds of clouds
     public float leftBounds;
     public float rightBounds;
+    public float lowerBounds;
+    public float topBounds;
 
     // Bounds of buttons
     public float minButton;
@@ -51,7 +53,7 @@ public class CloudGenerator : MonoBehaviour
         encoder.Enable();
 
         // Generate clouds
-        iterationLength = 2000;
+        iterationLength = 1500;
         allClouds = new GameObject[iterationLength];
 
         for (var i = 0; i < iterationLength; i++)
@@ -61,8 +63,8 @@ public class CloudGenerator : MonoBehaviour
 
             // Generate random starting position around you
             float x = Random.Range(leftBounds, rightBounds);
-            float y = Random.Range(-13.0f, 6.0f);
-            float z = Random.Range(-13.0f, 6.0f);
+            float y = Random.Range(-5.0f, 6.0f);
+            float z = Random.Range(lowerBounds, topBounds);
 
             // Instantiate cloud
             allClouds[i] = Instantiate(myCloud, new Vector3(x, y, z), Quaternion.identity) as GameObject;
@@ -83,6 +85,8 @@ public class CloudGenerator : MonoBehaviour
         float targetSpeed = (encoderVal - lastVal) / Time.deltaTime;
         speed = Mathf.Lerp(speed,targetSpeed,Time.deltaTime*3);
         position += speed * Time.deltaTime;
+
+        Debug.Log(position);
 
         // moveVal = Mathf.Lerp(moveVal, lastVal, Time.deltaTime);
         // lastInputDevice.SendMotorSpeed(Mathf.InverseLerp(0,2f, smoothSpeed));
@@ -126,8 +130,10 @@ public class CloudGenerator : MonoBehaviour
                 // Debug.Log(moveVal*10);
                 x -= (float)(speed*0.2f);
             }
+            // Debug.Log(position);
 
             allClouds[i].transform.position = new Vector3(x, y, z);
+            // allClouds[i].material.SetColor("_Color", Color.red);
         }
         
 		if (encoder.activeControl != null)

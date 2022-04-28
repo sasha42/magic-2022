@@ -407,8 +407,10 @@ MonoBehaviour:
   - {fileID: 9148962634792618436, guid: 296a10ca41cf94d29a18cc8310342b31, type: 3}
   constantSpeed: 1
   particles: {fileID: 690469086}
-  leftBounds: -13
-  rightBounds: 10
+  leftBounds: -5
+  rightBounds: 5
+  lowerBounds: -1
+  topBounds: 7
   minButton: -0.2
   maxButton: 0.2
   button:
@@ -826,8 +828,8 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
-      minScalar: 2
+      scalar: 0.1
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
