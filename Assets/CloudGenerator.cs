@@ -10,6 +10,7 @@ public class CloudGenerator : MonoBehaviour
 
     // Control speed of movement
 
+    List<Renderer> renderers = new List<Renderer>();
     public float constantSpeed;
 
     public ParticleSystem particles;
@@ -41,8 +42,12 @@ public class CloudGenerator : MonoBehaviour
     int iterationLength;
     float lastVal;
 
-    // Smooth moving around
-    int[] lerpStates = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    // Color variables
+    float outputColor = 1f;
+    float outputStart = 0.2f;
+    float outputEnd = 1f;
+    float inputStart = 0.25f;
+    float inputEnd = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -53,7 +58,7 @@ public class CloudGenerator : MonoBehaviour
         encoder.Enable();
 
         // Generate clouds
-        iterationLength = 1500;
+        iterationLength = 1000;
         allClouds = new GameObject[iterationLength];
 
         for (var i = 0; i < iterationLength; i++)
@@ -68,6 +73,13 @@ public class CloudGenerator : MonoBehaviour
 
             // Instantiate cloud
             allClouds[i] = Instantiate(myCloud, new Vector3(x, y, z), Quaternion.identity) as GameObject;
+
+            // Create a shared material for all clouds
+           allClouds[i].GetComponentsInChildren<Renderer>(renderers);
+            Material material =  renderers[0].material;
+           for(int j = 0; j < renderers.Count; j++){
+                renderers[j].sharedMaterial = material;
+                }
         }
 
         // Stop particles by default
@@ -85,8 +97,6 @@ public class CloudGenerator : MonoBehaviour
         float targetSpeed = (encoderVal - lastVal) / Time.deltaTime;
         speed = Mathf.Lerp(speed,targetSpeed,Time.deltaTime*3);
         position += speed * Time.deltaTime;
-
-        Debug.Log(position);
 
         // moveVal = Mathf.Lerp(moveVal, lastVal, Time.deltaTime);
         // lastInputDevice.SendMotorSpeed(Mathf.InverseLerp(0,2f, smoothSpeed));
@@ -118,12 +128,22 @@ public class CloudGenerator : MonoBehaviour
 
 
             // If clouds are out of bounds, move them back
-            if (x > rightBounds) {
-                // Debug.Log("Out of bounds");
-                 x = leftBounds;
-            } 
 
-            x += (float)constantSpeed * Time.deltaTime;
+            if (position < 0) {
+                // Debug.Log("Right");
+                x += (float)constantSpeed * Time.deltaTime;
+                if (x > rightBounds + 2) {
+                    // Debug.Log("Out of bounds");
+                    x = leftBounds + Random.Range(-2, 2);
+                } 
+            } else {
+                // Debug.Log("Left");
+                x -= (float)constantSpeed * Time.deltaTime;
+                if (x < leftBounds - 2) {
+                    // Debug.Log("Out of bounds");
+                    x = rightBounds + Random.Range(-2, 2);
+                } 
+            }
             
             // Move clouds based on rotary encoder
             if ( position < maxButton+0.1 && position > minButton-0.1) {
@@ -133,7 +153,8 @@ public class CloudGenerator : MonoBehaviour
             // Debug.Log(position);
 
             allClouds[i].transform.position = new Vector3(x, y, z);
-            // allClouds[i].material.SetColor("_Color", Color.red);
+
+            allClouds[i].GetComponentInChildren<Renderer>().sharedMaterial.color = new Color(outputColor,outputColor,outputColor);
         }
         
 		if (encoder.activeControl != null)
@@ -155,6 +176,23 @@ public class CloudGenerator : MonoBehaviour
                 // lastInputDevice.SendMotorSpeed(Mathf.InverseLerp(0,2f, smoothSpeed));
                 lastInputDevice.SendMotorSpeed(adjustedValue);
 
+                // Do the adjusted color
+                // outputColor = Mathf.Abs(outputStart + ((outputEnd - outputStart)/(inputEnd - inputStart)) + (Mathf.Abs(encoderVal)-inputStart));
+                // if (outputColor > 0.8f) {
+                //     outputColor = 0.8f;
+                // }
+                // Debug.Log(outputColor);
+                // if (encoderVal < 0f) {
+                //     outputColor = 0.01f;
+                // } else {
+                    outputColor = 1 - (float)Mathf.Abs(value)*(float)1.3;
+
+                    if (outputColor < 0) {
+                        outputColor = 0;
+                    }
+                    // if (outputColor < 1)
+                // }
+
                 // particles.Play();
                 // particles.emissionRate = 1500*value;
 
@@ -174,20 +212,44 @@ public class CloudGenerator : MonoBehaviour
                 // lastValue = value;
                 // particles.Play();
                 // particles.emissionRate = 1500*value;
+                // Do the adjusted color
+                // outputColor = Mathf.Abs(outputStart + ((outputEnd - outputStart)/(inputEnd - inputStart)) + (Mathf.Abs(encoderVal)-inputStart));
+                // if (encoderVal > 0f) {
+                //     outputColor = 0.01f;
+                // } else {
+                    outputColor = 1 - (float)value*(float)1.3;
+                    if (outputColor < 0) {
+                        outputColor = 0;
+                    }
+                    // if (outputColor < 1)
+                // }
+                // Debug.Log(outputColor);
+                // if (encoderVal < 0)
             // } else {
+            //     outputColor = 1;
                 // lastInputDevice.SendMotorSpeed(0);
                 // particles.Stop();
             }
+
+
 
             // Do the rain
              if (encoderVal > maxButton) {
                 float value = encoder.ReadValue<float>();
                 particles.Play();
-                particles.emissionRate = Mathf.Pow(100*value, 2);
+                float emValue = Mathf.Pow(50*value, 3);
+                if (emValue > 10000) {
+                    emValue = 10000;
+                }
+                particles.emissionRate = emValue;
             } else if (encoderVal < minButton) {
                 float value = Mathf.Abs(encoder.ReadValue<float>());
                 particles.Play();
-                particles.emissionRate = Mathf.Pow(100*value, 2);
+                float emValue = Mathf.Pow(50*value, 3);
+                if (emValue > 10000) {
+                    emValue = 10000;
+                }
+                particles.emissionRate = emValue;
             } else {
                 lastInputDevice.SendMotorSpeed(0);
                 particles.Stop();
