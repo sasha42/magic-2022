@@ -33,7 +33,7 @@ public class SunBounce : MonoBehaviour
         // Debug.Log(val);
 
         if (val > 0.2) {
-            Debug.Log(val);
+            // Debug.Log(val);
             sunOffset = -Mathf.Abs((((float)val-(float)0.2)*10));
         } else {
             sunOffset = -5;
