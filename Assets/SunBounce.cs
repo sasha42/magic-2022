@@ -15,7 +15,7 @@ public class SunBounce : MonoBehaviour
 
     // Velocity stuff
     // public float velocity = 1;
-    public float reachTime = 0.5f;
+    public float reachTime = 5f;
     Vector3 velocity;
 
     // Start is called before the first frame update
@@ -30,8 +30,14 @@ public class SunBounce : MonoBehaviour
     {
         // Read encoder value
         float val = encoder.ReadValue<float>();
-        Debug.Log(val);
-        sunOffset = val*5;
+        // Debug.Log(val);
+
+        if (val > 0.2) {
+            Debug.Log(val);
+            sunOffset = -Mathf.Abs((((float)val-(float)0.2)*10));
+        } else {
+            sunOffset = -5;
+        }
 
         // Adjust sun
         float yAdjust = Mathf.PingPong(Time.time * speed, 1) * (float)0.1 - 3;
