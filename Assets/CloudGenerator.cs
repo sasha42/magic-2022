@@ -58,7 +58,7 @@ public class CloudGenerator : MonoBehaviour
         encoder.Enable();
 
         // Generate clouds
-        iterationLength = 1000;
+        iterationLength = 500;
         allClouds = new GameObject[iterationLength];
 
         for (var i = 0; i < iterationLength; i++)
