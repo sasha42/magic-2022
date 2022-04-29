@@ -49,6 +49,9 @@ public class CloudGenerator : MonoBehaviour
     float inputStart = 0.25f;
     float inputEnd = 1f;
 
+    float deltaEncoder;
+    float finalValue;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +61,7 @@ public class CloudGenerator : MonoBehaviour
         encoder.Enable();
 
         // Generate clouds
-        iterationLength = 500;
+        iterationLength = 300;
         allClouds = new GameObject[iterationLength];
 
         for (var i = 0; i < iterationLength; i++)
@@ -92,6 +95,17 @@ public class CloudGenerator : MonoBehaviour
         // Read rotary encoder value
         float encoderVal = encoder.ReadValue<float>();
 
+        // if (encoderVal >= 1) {
+        //     deltaEncoder = (encoderVal - encoderVal)+1; 
+        //     // Debug.Log(1 - encoderVal);
+        //     finalValue = deltaEncoder;
+        // } else if ( encoderVal <= -1) {
+        //     deltaEncoder = (encoderVal + encoderVal)-1; 
+        //     finalValue = deltaEncoder;
+        // }
+
+        encoderVal = encoderVal/3;
+        // Debug.Log(finalValue);
 
         // Compuate delta for movement
         float targetSpeed = (encoderVal - lastVal) / Time.deltaTime;
@@ -167,7 +181,8 @@ public class CloudGenerator : MonoBehaviour
             // Vibrate if out of bounds
             if (encoderVal > maxButton-0.3) {
                 encoderVal = lastVal;
-                float value = encoder.ReadValue<float>();
+                // float value = encoder.ReadValue<float>();
+                float value = encoderVal;
 
                 float adjustedValue = value * 1.2f;
                 // float speed = Mathf.Abs(adjustedValue - lastValue);
@@ -199,7 +214,8 @@ public class CloudGenerator : MonoBehaviour
                 // lastValue = adjustedValue;
             } else if (encoderVal < minButton+0.3) {
                 encoderVal = lastVal;
-                float value = Mathf.Abs(encoder.ReadValue<float>());
+                // float value = Mathf.Abs(encoder.ReadValue<float>());
+                float value = Mathf.Abs(encoderVal);
                 // float speed = Mathf.Abs(value - lastValue) / Time.deltaTime;
                 // smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 12);
                 float adjustedValue = value * 1.2f;
@@ -235,7 +251,8 @@ public class CloudGenerator : MonoBehaviour
 
             // Do the rain
              if (encoderVal > maxButton) {
-                float value = encoder.ReadValue<float>();
+                // float value = encoder.ReadValue<float>();
+                float value = encoderVal;
                 particles.Play();
                 float emValue = Mathf.Pow(50*value, 3);
                 if (emValue > 10000) {
@@ -243,7 +260,8 @@ public class CloudGenerator : MonoBehaviour
                 }
                 particles.emissionRate = emValue;
             } else if (encoderVal < minButton) {
-                float value = Mathf.Abs(encoder.ReadValue<float>());
+                // float value = Mathf.Abs(encoder.ReadValue<float>());
+                float value = Mathf.Abs(encoderVal);
                 particles.Play();
                 float emValue = Mathf.Pow(50*value, 3);
                 if (emValue > 10000) {
